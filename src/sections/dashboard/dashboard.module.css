@@ -1,0 +1,108 @@
+.wrapper{
+    border: 1px solid var(--lightgray);
+    padding: var(--padding_2);
+    border-radius: 15px;
+}
+
+.head{
+    padding: var(--padding_1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.head h3{
+    font-weight: 500;
+    letter-spacing: .5pt;
+}
+
+.head p{
+    font-size: var(--font_grand);
+    color: var(--gray);
+}
+
+.body{
+    padding: var(--padding_1);
+    border: 1px solid var(--lightgray);
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: start;
+}
+
+.body span{
+    display: grid;
+    gap: 10px;
+}
+
+.body span h3, .body span p{
+    color: var(--gray);
+}
+
+.body span h3{
+    letter-spacing: .2pt;
+}
+
+.action{
+    padding: var(--padding_2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.action span{
+    display: flex;
+    align-items: center;
+}
+
+.action span p{
+    font-size: var(--font_grand);
+    color: var(--gray);
+}
+
+.action span img{
+    opacity: .3;
+}
+
+.action button{
+    padding: 30px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--green);
+    display: flex;
+    cursor: pointer;
+    transition: .5s all ease;
+}
+
+.action button:hover{
+    background-color: var(--green2);
+}
+
+.foot{
+    padding: var(--padding_1);
+    border-top: 1px solid var(--lightgray);
+    color: var(--gray);
+    font-size: var(--font_small);
+}
+
+.alertIcon{
+    width: 50px;
+    height: 50px;
+    
+    /* El color que quieres que tenga el icono */
+    background-color: red; 
+
+    /* Definimos la máscara */
+    -webkit-mask-image: url('/icons/alert.svg');
+    mask-image: url('/icons/alert.svg');
+
+    /* Ajustes para que el icono no se repita y se centre */
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
