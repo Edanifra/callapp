@@ -87,6 +87,39 @@
     font-size: var(--font_small);
 }
 
+.audioElement{
+    width: 100%;
+    margin: 20px 0;
+}
+
+.playerActions{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.download img, .deleteBtn img {
+    width: 25px;
+    height: 25px;
+}
+
+.recordingPlayer{
+    padding: 10px 0;
+}
+
+.download, .deleteBtn{
+    padding: 5px;
+    border: 1px solid var(--gray);
+    border-radius: 5px;
+    font-size: var(--font_mid);
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 .inCallActions{
     display: flex;
     gap: var(--padding_1);

@@ -7,6 +7,7 @@ const Dashboard = () => {
     const [seconds, setSeconds] = useState(0);
     const [isMuted, setIsMuted] = useState(false);
     const [audioUrl, setAudioUrl] = useState(null);
+    const [finishedCall, setFinishedCall] = useState(false)
 
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
@@ -51,6 +52,7 @@ const Dashboard = () => {
         }
         setStream(null);
         setIsCalling(false);
+        setFinishedCall(true);
     };
 
     useEffect(() => {
@@ -77,11 +79,16 @@ const Dashboard = () => {
             stream.getAudioTracks().forEach(track => {
                 // enabled = true significa que se escucha. 
                 // Si mute es true, enabled debe ser false.
-                track.enabled = isMuted; 
+                track.enabled = isMuted;
             });
             setIsMuted(newMuteState);
         }
     };
+
+    const handleDelete = () => {
+        setAudioUrl(null)
+        setFinishedCall(false)
+    }
 
     return (
         <div className={styles.wrapper}>
@@ -90,48 +97,28 @@ const Dashboard = () => {
                 <p>Realiza una llamada y graba el audio</p>
             </div>
 
-            <div className={styles.body}>
-                <div className={styles.alertIcon}></div>
-                <span>
-                    <h3>{isCalling ? "Llamada en curso..." : "Antes de comenzar:"}</h3>
-                    {isCalling && (
-                        <h1 className={styles.timer}>{formatTime(seconds)}</h1>
-                    )}
-                    <p>
-                        {isCalling
-                            ? "Tu micrófono está activo, Grabación en curso..."
-                            : "Esta aplicación necesita acceso a tu micrófono."}
-                    </p>
-                </span>
-            </div>
-
-            {/* REPRODUCTOR DE GRABACIÓN */}
-            {audioUrl && !isCalling && (
-                <div className={styles.recordingPlayer}>
-                    <h4>Grabación de la llamada:</h4>
-                    <audio src={audioUrl} controls className={styles.audioElement} />
-
-                    <div className={styles.playerActions}>
-                        {/* USAR ETIQUETA 'a' PARA DESCARGAS EXTERNAS/BLOBS */}
-                        <a 
-                            href={audioUrl} 
-                            download="Llamada-grabada.wav" 
-                            className={styles.download}
-                        >
-                            Descargar grabación
-                        </a>
-
-                        <button onClick={() => setAudioUrl(null)} className={styles.deleteBtn}>
-                            Eliminar
-                        </button>
-                    </div>
+            {!finishedCall ?
+                <div className={styles.body}>
+                    <div className={styles.alertIcon}></div>
+                    <span>
+                        <h3>{isCalling ? "Llamada en curso..." : "Antes de comenzar:"}</h3>
+                        {isCalling && (
+                            <h1 className={styles.timer}>{formatTime(seconds)}</h1>
+                        )}
+                        <p>
+                            {isCalling
+                                ? "Tu micrófono está activo, Grabación en curso..."
+                                : "Esta aplicación necesita acceso a tu micrófono."}
+                        </p>
+                    </span>
                 </div>
-            )}
-            
+                : <></>
+            }
+
             <div className={styles.action}>
                 <span>
                     <img src="/icons/dot.svg" alt="status" />
-                    <p>{isCalling ? "Llamada activa." : "Sin llamada activa."}</p>
+                    <p>{isCalling ? "Llamada activa." : (finishedCall ? "Llamada finalizada" : "Sin llamada activa.")}</p>
                 </span>
                 <div className={styles.inCallActions}>
                     {isCalling && (
@@ -141,12 +128,37 @@ const Dashboard = () => {
                     )}
                     <button
                         onClick={isCalling ? handleEndCall : handleStartCall}
-                        style={{ backgroundColor: isCalling ? '#ff3d3d' : '#4CAF50' }}
+                        style={{ backgroundColor: isCalling ? '#ff3d3d' : (finishedCall ? '#000' : '#4CAF50') }}
                     >
                         <img src="/icons/phoneWhite.svg" alt="phone" />
                     </button>
                 </div>
             </div>
+
+            {/* REPRODUCTOR DE GRABACIÓN */}
+            {audioUrl && !isCalling && (
+                <div className={styles.recordingPlayer}>
+                    <h4>Audio de la llamada:</h4>
+                    <audio src={audioUrl} controls className={styles.audioElement} />
+
+                    <div className={styles.playerActions}>
+                        <a
+                            href={audioUrl}
+                            download="Llamada-grabada.wav"
+                            className={styles.download}
+                        >
+                            <img src="/icons/download.svg" />
+                            Descargar grabación
+                        </a>
+
+                        <button onClick={handleDelete} className={styles.deleteBtn}>
+                            <img src="/icons/trash2.svg" />
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <div className={styles.foot}>
                 <p>La grabación comienza automáticamente al conectar la llamada.</p>
             </div>
