@@ -3,7 +3,10 @@ import styles from "./dashboard.module.css";
 import { useRecordAudio } from "../../hooks/recordAudio";
 
 const Dashboard = () => {
-    const { formatTime, isCalling, audioUrl, isMuted, setAudioUrl, handleEndCall, handleStartCall, seconds, toggleMute } = useRecordAudio()
+    const { 
+        formatTime, isCalling, audioUrl, isMuted, setAudioUrl, 
+        handleEndCall, handleStartCall, seconds, toggleMute 
+    } = useRecordAudio()
 
     return (
         <div className={styles.wrapper}>
@@ -38,13 +41,15 @@ const Dashboard = () => {
                         <a 
                             href={audioUrl} 
                             download="Llamada-grabada.wav" 
-                            className={styles.download}
+                            className={styles.IA}
                         >
-                            Descargar grabación
+                            Download
                         </a>
 
-                        <button onClick={() => setAudioUrl(null)} className={styles.deleteBtn}>
-                            Eliminar
+                        <button className={styles.IA}>Send to IA server</button>
+
+                        <button onClick={() => setAudioUrl(null)} className={styles.IA}>
+                            Delete
                         </button>
                     </div>
                 </div>
