@@ -2,6 +2,8 @@
     border: 1px solid var(--lightgray);
     padding: var(--padding_2);
     border-radius: 15px;
+    margin: auto;
+    box-sizing: border-box;
 }
 
 .head{
