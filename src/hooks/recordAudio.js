@@ -6,6 +6,7 @@ export const useRecordAudio = () => {
     const [seconds, setSeconds] = useState(0);
     const [isMuted, setIsMuted] = useState(false);
     const [audioUrl, setAudioUrl] = useState(null);
+    const [fileResult, setFileResult] = useState(null)
 
     const mediaRecorderRef = useRef(null);
     const audioChunksRef = useRef([]);
@@ -30,6 +31,7 @@ export const useRecordAudio = () => {
 
             mediaRecorder.onstop = () => {
                 const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+                setFileResult(audioBlob)
                 const url = URL.createObjectURL(audioBlob);
                 setAudioUrl(url);
             };
@@ -97,6 +99,7 @@ export const useRecordAudio = () => {
         handleStartCall,
         handleEndCall,
         formatTime,
-        toggleMute
+        toggleMute,
+        fileResult
     }
 }

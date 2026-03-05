@@ -1,12 +1,20 @@
 import { useEffect, useRef, useState } from "react"; // Eliminamos Link si no se usa para rutas
 import styles from "./dashboard.module.css";
 import { useRecordAudio } from "../../hooks/recordAudio";
+import { useInterviews } from "../../hooks/interviews";
 
 const Dashboard = () => {
     const { 
         formatTime, isCalling, audioUrl, isMuted, setAudioUrl, 
-        handleEndCall, handleStartCall, seconds, toggleMute 
+        handleEndCall, handleStartCall, seconds, toggleMute,
+        fileResult
     } = useRecordAudio()
+
+    const { uploadAudioToServer } = useInterviews()
+
+    const handleUpload = () => {
+        uploadAudioToServer(fileResult)
+    }
 
     return (
         <div className={styles.wrapper}>
@@ -46,7 +54,11 @@ const Dashboard = () => {
                             Download
                         </a>
 
-                        <button className={styles.IA}>Send to IA server</button>
+                        <button
+                            onClick={handleUpload}
+                            className={styles.IA}>
+                                Send to IA server
+                        </button>
 
                         <button onClick={() => setAudioUrl(null)} className={styles.IA}>
                             Delete
