@@ -1,89 +1,12 @@
 import { useEffect, useRef, useState } from "react"; // Eliminamos Link si no se usa para rutas
 import styles from "./dashboard.module.css";
+import { useRecordAudio } from "../../hooks/recordAudio";
 
 const Dashboard = () => {
-    const [isCalling, setIsCalling] = useState(false);
-    const [stream, setStream] = useState(null);
-    const [seconds, setSeconds] = useState(0);
-    const [isMuted, setIsMuted] = useState(false);
-    const [audioUrl, setAudioUrl] = useState(null);
-    const [finishedCall, setFinishedCall] = useState(false)
-
-    const mediaRecorderRef = useRef(null);
-    const audioChunksRef = useRef([]);
-
-    const handleStartCall = async () => {
-        try {
-            const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            setStream(audioStream);
-            setIsCalling(true);
-            setAudioUrl(null);
-            setIsMuted(false); // Resetear mute al empezar
-
-            const mediaRecorder = new MediaRecorder(audioStream);
-            mediaRecorderRef.current = mediaRecorder;
-            audioChunksRef.current = [];
-
-            mediaRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    audioChunksRef.current.push(event.data);
-                }
-            };
-
-            mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
-                const url = URL.createObjectURL(audioBlob);
-                setAudioUrl(url);
-            };
-
-            mediaRecorder.start();
-        } catch (error) {
-            console.error("Error al iniciar llamada: ", error);
-        }
-    };
-
-    const handleEndCall = () => {
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
-            mediaRecorderRef.current.stop();
-        }
-
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-        }
-        setStream(null);
-        setIsCalling(false);
-        setFinishedCall(true);
-    };
-
-    useEffect(() => {
-        let interval = null;
-        if (isCalling) {
-            interval = setInterval(() => {
-                setSeconds((prev) => prev + 1);
-            }, 1000);
-        } else {
-            setSeconds(0);
-        }
-        return () => clearInterval(interval);
-    }, [isCalling]);
-
-    const formatTime = (totalSeconds) => {
-        const mins = Math.floor(totalSeconds / 60);
-        const secs = totalSeconds % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    };
-
-    const toggleMute = () => {
-        if (stream) {
-            const newMuteState = !isMuted;
-            stream.getAudioTracks().forEach(track => {
-                // enabled = true significa que se escucha. 
-                // Si mute es true, enabled debe ser false.
-                track.enabled = isMuted;
-            });
-            setIsMuted(newMuteState);
-        }
-    };
+    const { 
+        formatTime, isCalling, audioUrl, isMuted, setAudioUrl, 
+        handleEndCall, handleStartCall, seconds, toggleMute 
+    } = useRecordAudio()
 
     const handleDelete = () => {
         setAudioUrl(null)
@@ -97,20 +20,43 @@ const Dashboard = () => {
                 <p>Realiza una llamada y graba el audio</p>
             </div>
 
-            {!finishedCall ?
-                <div className={styles.body}>
-                    <div className={styles.alertIcon}></div>
-                    <span>
-                        <h3>{isCalling ? "Llamada en curso..." : "Antes de comenzar:"}</h3>
-                        {isCalling && (
-                            <h1 className={styles.timer}>{formatTime(seconds)}</h1>
-                        )}
-                        <p>
-                            {isCalling
-                                ? "Tu micrófono está activo, Grabación en curso..."
-                                : "Esta aplicación necesita acceso a tu micrófono."}
-                        </p>
-                    </span>
+            <div className={styles.body}>
+                <div className={styles.alertIcon}></div>
+                <span>
+                    <h3>{isCalling ? "Llamada en curso..." : "Antes de comenzar:"}</h3>
+                    {isCalling && (
+                        <h1 className={styles.timer}>{formatTime(seconds)}</h1>
+                    )}
+                    <p>
+                        {isCalling
+                            ? "Tu micrófono está activo, Grabación en curso..."
+                            : "Esta aplicación necesita acceso a tu micrófono."}
+                    </p>
+                </span>
+            </div>
+
+            {/* REPRODUCTOR DE GRABACIÓN */}
+            {audioUrl && !isCalling ? 
+                <div className={styles.recordingPlayer}>
+                    <h4>Grabación de la llamada:</h4>
+                    <audio src={audioUrl} controls className={styles.audioElement} />
+
+                    <div className={styles.playerActions}>
+                        {/* USAR ETIQUETA 'a' PARA DESCARGAS EXTERNAS/BLOBS */}
+                        <a 
+                            href={audioUrl} 
+                            download="Llamada-grabada.wav" 
+                            className={styles.IA}
+                        >
+                            Download
+                        </a>
+
+                        <button className={styles.IA}>Send to IA server</button>
+
+                        <button onClick={() => setAudioUrl(null)} className={styles.IA}>
+                            Delete
+                        </button>
+                    </div>
                 </div>
                 : <></>
             }

@@ -2,6 +2,8 @@
     border: 1px solid var(--lightgray);
     padding: var(--padding_2);
     border-radius: 15px;
+    margin: auto;
+    box-sizing: border-box;
 }
 
 .head{
@@ -149,4 +151,23 @@
     mask-size: contain;
     -webkit-mask-position: center;
     mask-position: center;
+}
+
+.IA{
+    background-color: rgb(49, 162, 238);
+    color: white;
+    border: none;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    margin: 20px 0;
+    cursor: pointer;
+}
+
+.playerActions{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
 }

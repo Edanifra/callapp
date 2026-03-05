@@ -5,12 +5,11 @@
 }
 
 .wrapper{
-  width: 20%;
+  width: 100dvw;
   height: 100dvh;
   display: flex;
   align-items: center;
   margin: var(--padding_3) auto;
-  max-width: 100dvw;
 }
 
 :root{
