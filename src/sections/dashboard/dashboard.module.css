@@ -73,7 +73,7 @@
     background-color: var(--green);
     display: flex;
     cursor: pointer;
-    transition: .5s all ease;
+    transition: .5s all;
 }
 
 .action button:hover{
@@ -87,9 +87,20 @@
     font-size: var(--font_small);
 }
 
+.inCallActions{
+    display: flex;
+    gap: var(--padding_1);
+}
+
+.muteBtn{
+    background-color: white !important;
+    border: 1px solid var(--lightgray) !important;
+}
+
 .alertIcon{
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
+    margin: 5px;
     
     /* El color que quieres que tenga el icono */
     background-color: red; 
